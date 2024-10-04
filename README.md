@@ -38,3 +38,9 @@
 ### 对歌曲去重
 
 使用 C++ 去重，去重后的歌曲 ID 存放于 `songs/deduplicated_songs.txt` 中。
+
+### 爬取歌词
+
+通过 `https://music.163.com/api/song/lyric?os=pc&id=SONGID&lv=-1` 爬取。
+
+得到的歌词存放于 `lyrics/SONGID.txt` 中，同时将其 md5 存放于 `lyrics/md5sum/SONGID.md5` 中，通过校验的歌词视为爬取完毕，无需再次爬取。

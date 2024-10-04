@@ -1,5 +1,4 @@
 const fs = require('fs');
-const readline = require('readline');
 
 const verbose = true;
 const debug = true;
