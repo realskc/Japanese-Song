@@ -25,8 +25,16 @@
 
 歌单是直接搜的，歌手是乱选的。
 
+歌单存放于 `songs/playlists.txt` 中，歌手存放于 `songs/artists.txt` 中。
+
 ### 生成歌曲列表
 
 歌单使用 `https://api.yimian.xyz/msc/?type=playlist&id=ID` 爬取。
 
 歌手使用 `https://music.163.com/api/search/get?s=ID&type=1&offset=OFFSET&limit=100` 爬取前 $1000$ 首作品。
+
+得到的歌曲 ID 存放于 `songs/songs.txt` 中。
+
+### 对歌曲去重
+
+使用 C++ 去重，去重后的歌曲 ID 存放于 `songs/deduplicated_songs.txt` 中。
