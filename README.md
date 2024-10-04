@@ -4,9 +4,13 @@
 ## 具体流程
 
 1. 收集一些歌单或歌手。
-1. 爬取它们的歌，得到歌的列表（URL）。
-1. 对 URL 去重。
-1. 提取 URL 中的歌词，得到若干歌词文件。
+1. 爬取他们的歌，得到歌曲列表。
+1. 对歌曲 ID 去重。
+1. 爬取歌词，得到若干歌词文件。
+
+	https://note.ldper.com/netease-music-api-interface.html
+	https://blog.csdn.net/tsumikistep/article/details/140356305
+
 1. （使用其它开源软件）对歌词进行词语划分。
 
     Mecab: https://zhuanlan.zhihu.com/p/136691735
@@ -16,3 +20,13 @@
 1. 将所有单词按权值排序，得到高频词列表。
 1. 给汉字标注读音，最好能爬取释义并附着其上。
 1. 附加：给歌按热度排序，选取热门歌中的例句附着在高频词列表上。
+
+### 收集歌单与歌手
+
+歌单是直接搜的，歌手是乱选的。
+
+### 生成歌曲列表
+
+歌单使用 `https://api.yimian.xyz/msc/?type=playlist&id=ID` 爬取。
+
+歌手使用 `https://music.163.com/api/search/get?s=ID&type=1&offset=OFFSET&limit=100` 爬取前 $1000$ 首作品。
