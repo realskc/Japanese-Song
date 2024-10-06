@@ -11,6 +11,7 @@
 	https://note.ldper.com/netease-music-api-interface.html
 	https://blog.csdn.net/tsumikistep/article/details/140356305
 
+1. 扫描每一首歌，把非日语歌加入 ban list，并将歌词浓缩进若干文本文件中。
 1. （使用其它开源软件）对歌词进行词语划分。
 
     Mecab: https://zhuanlan.zhihu.com/p/136691735
@@ -44,3 +45,7 @@
 通过 `https://music.163.com/api/song/lyric?os=pc&id=SONGID&lv=-1` 爬取。
 
 得到的歌词存放于 `lyrics/SONGID.txt` 中，同时将其 md5 存放于 `lyrics/md5sum/SONGID.md5` 中，通过校验的歌词视为爬取完毕，无需再次爬取。
+
+### 提纯歌词
+
+提纯后的歌词存放于 `cleaned_lyrics/SONGID.txt` 中，清洗后的歌曲列表为 `songs/cleaned_songs.txt`。

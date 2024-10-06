@@ -1,5 +1,7 @@
 .vscode/
 lyrics/
+cleaned_lyrics/
+*.exe
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
