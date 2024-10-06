@@ -4,10 +4,14 @@ typedef long long ll;
 void warn_invalid_id(string str) {
 	cerr << "[Warning] Invalid Song ID in " << str << endl;
 }
-bool is_kana(char32_t c){
+bool is_kana(char32_t c) {
 	if (c >= 0x3040 && c <= 0x309F) return 1;
 	if (c >= 0x30A0 && c <= 0x30FF) return 1;
 	if (c >= 0x31F0 && c <= 0x31FF) return 1;
+	return 0;
+}
+bool is_kanji(char32_t c) {
+	if (c >= 0x4E00 && c <= 0x9FFF) return 1;
 	return 0;
 }
 u32string utf8_to_utf32(const string &str) {
@@ -17,6 +21,53 @@ u32string utf8_to_utf32(const string &str) {
 string utf32_to_utf8(const u32string &u32str) {
 	wstring_convert<codecvt_utf8<char32_t>, char32_t> converter;
 	return converter.to_bytes(u32str);
+}
+u32string clean(u32string &line) {
+	while(1) { // 删除 [mm:ss.xx]
+		size_t pos=line.find(U"]");
+		if (pos==line.npos) break;
+		line = line.substr(pos+1);
+	}
+	u32string tmp;
+	for(char32_t ch:line) {
+		if(ch != 32) tmp.push_back(ch);
+	}
+	tmp.swap(line); // 删除一行的所有空格
+	size_t tmp_cur = 0;
+	while(tmp_cur < line.size()) { // 删除“漢字（かんじ）”中的括号注音
+		size_t posl=line.find(U"（", tmp_cur);
+		if (posl==line.npos) break;
+		size_t posr=line.find(U"）", posl);
+		if (posr==line.npos) break;
+		if (posl==0 || !is_kanji(line[posl-1])) {
+			tmp_cur = posl+1;
+			continue;
+		}
+		bool flag=1;
+		for (int j=posl+1; j<posr; ++j) {
+			if(!is_kana(line[j])) {
+				flag=0;
+				break;
+			}
+		}
+		if(!flag) {
+			tmp_cur = posr+1;
+			continue;
+		}
+		line.erase(posl, posr-posl+1);
+	}
+	while(!line.empty()) { // 去除头尾空白字符
+		if(isspace(line[0])) {
+			line = line.substr(1);
+			continue;
+		}
+		if(isspace(line.back())) {
+			line.pop_back();
+			continue;
+		}
+		break;
+	}
+	return line;
 }
 int main() {
 	ifstream song_list("songs/deduplicated_songs.txt");
@@ -80,7 +131,7 @@ int main() {
 						break;
 					}
 				}
-				if(flag) continue;
+				if(flag) continue;// 如果是空行则跳过
 				if(!hasKana){
 					for(char32_t ch:line) {
 						if(is_kana(ch)){
@@ -94,22 +145,7 @@ int main() {
 				if(line.find(U"作曲") != line.npos) continue;
 				if(line.find(U"编曲") != line.npos) continue;
 				if(line.find(U"纯音乐，请欣赏") != line.npos) break;
-				while(1) {
-					size_t pos=line.find(U"]");
-					if (pos==line.npos) break;
-					line = line.substr(pos+1);
-				}
-				while(!line.empty()) {
-					if(isspace(line[0])) {
-						line = line.substr(1);
-						continue;
-					}
-					if(isspace(line.back())) {
-						line.pop_back();
-						continue;
-					}
-					break;
-				}
+				line = clean(line);
 				if(line.empty()) continue;
 				cleaned_song << utf32_to_utf8(line) << '\n';
 			}

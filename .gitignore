@@ -1,6 +1,8 @@
 .vscode/
 lyrics/
 cleaned_lyrics/
+parsed_lyrics/
+test/
 *.exe
 
 # Byte-compiled / optimized / DLL files
