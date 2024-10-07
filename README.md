@@ -26,6 +26,8 @@
 
 歌单是直接搜的，歌手是乱选的。
 
+写了一个简单的脚本 `songs/search_playlists.js` 用来爬取歌单的搜索结果，然后手动删去了日常对话一类的歌单（播客）。
+
 歌单存放于 `songs/playlists.txt` 中，歌手存放于 `songs/artists.txt` 中。
 
 ### 生成歌曲列表
@@ -34,18 +36,26 @@
 
 歌手使用 `https://music.163.com/api/search/get?s=ID&type=1&offset=OFFSET&limit=100` 爬取前 $1000$ 首作品。
 
-得到的歌曲 ID 存放于 `songs/songs.txt` 中。
+使用 `songs/fetch_songs.js` 进行爬取，得到的歌曲 ID 存放于 `songs/songs.txt` 中。
 
 ### 对歌曲去重
 
-使用 C++ 去重，去重后的歌曲 ID 存放于 `songs/deduplicated_songs.txt` 中。
+使用 `songs/deduplicator.cpp` 去重，去重后的歌曲 ID 存放于 `songs/deduplicated_songs.txt` 中。
 
 ### 爬取歌词
 
 通过 `https://music.163.com/api/song/lyric?os=pc&id=SONGID&lv=-1` 爬取。
 
-得到的歌词存放于 `lyrics/SONGID.txt` 中，同时将其 md5 存放于 `lyrics/md5sum/SONGID.md5` 中，通过校验的歌词视为爬取完毕，无需再次爬取。
+使用 `fetch_lyrics.js` 爬取歌词（网易云 API 居然没有访问频率限制），得到的歌词存放于 `lyrics/SONGID.txt` 中，同时将其 md5 存放于 `lyrics/md5sum/SONGID.md5` 中，通过校验的歌词视为爬取完毕，无需再次爬取。
 
 ### 提纯歌词
 
-提纯后的歌词存放于 `cleaned_lyrics/SONGID.txt` 中，清洗后的歌曲列表为 `songs/cleaned_songs.txt`。
+使用 `clean_lyrics.cpp` 进行提纯，提纯后的歌词存放于 `cleaned_lyrics/SONGID.txt` 中，清洗后的歌曲列表为 `songs/cleaned_songs.txt`。
+
+### 分词
+
+使用 `parse_lyrics.ps1` 进行分词，得到的结果存放于 parsed_lyrics 中。
+
+### 统计高频词
+
+使用 `frequent_words.ipynb` 统计高频词，结果存放于 `歌词高频词.csv` 中。
